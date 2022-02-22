@@ -30,11 +30,14 @@ interpolate() {
 main() {
     IFS=\|
     local i=1
-    local toggle_unread_counter=$(tmux show-option -gqv "$maildir_unread_counter")
+    local toggle_unread_counter
+    toggle_unread_counter=$(tmux show-option -gqv "$maildir_unread_counter")
     for maildir in $(tmux show-option -gqv "$maildir_counters"); do
+      if [[ -d "$maildir" ]] || [[ -f "$maildir" ]];then
         interpolate "status-left" "$i" "$maildir" "$toggle_unread_counter"
         interpolate "status-right" "$i" "$maildir" "$toggle_unread_counter"
-        i=$((i+1))
+      fi
+      i=$((i+1))
     done
 }
 
